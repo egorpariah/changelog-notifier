@@ -13,7 +13,7 @@ try {
     for (const commit of commits) {
       const isCommitMessageHasPrefix = commit.message.includes(prefix);
       if (isCommitMessageHasPrefix) {
-        changelogText += `• ${commit.message} (${commit.author.username})\n`;
+        changelogText += `• ${commit.message} \(${commit.author.username}\)\n`;
       }
     }
 
@@ -26,7 +26,8 @@ try {
   const url = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
   const urlSearchParams = new URLSearchParams({
     chat_id: CHAT_ID,
-    text: encodeURIComponent(changelogText),
+    text: changelogText,
+    parse_mode: 'MarkdownV2',
   });
 
   fetch(url + '?' + urlSearchParams.toString()).then(response => {
