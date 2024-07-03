@@ -30,15 +30,16 @@ try {
     parse_mode: 'MarkdownV2',
   });
 
-  fetch(url + '?' + urlSearchParams.toString()).then(response => {
+  fetch(url + '?' + urlSearchParams.toString()).then(async response => {
+    const json = await response.json();
+
     if (!response.ok) {
       throw new Error(
-        `HTTP error! status: ${response.status}, description: ${response
-          .json()
-          .then(json => json.description)}`
+        `HTTP error! status: ${response.status}, description: ${json.description}`
       );
     }
   });
+  
   core.info(changelogText);
 } catch (error) {
   core.setFailed(error.message);
