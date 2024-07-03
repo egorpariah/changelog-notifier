@@ -31035,6 +31035,14 @@ function parseParams (str) {
 module.exports = parseParams
 
 
+/***/ }),
+
+/***/ 9150:
+/***/ ((module) => {
+
+"use strict";
+module.exports = JSON.parse('{"feat":"Фичи","fix":"Исправления багов","docs":"Документация","style":"Форматирование","refactor":"Рефакторинг","perf":"Производительность","test":"Тесты","chore":"Служебные изменения"}');
+
 /***/ })
 
 /******/ 	});
@@ -31080,18 +31088,41 @@ var __webpack_exports__ = {};
 (() => {
 const core = __nccwpck_require__(3722);
 const github = __nccwpck_require__(8408);
+const locale = __nccwpck_require__(9150);
 
 try {
   const prefixes = core.getMultilineInput('prefixes');
   const commits = github.context.payload.commits;
-  for (const commit of commits) {
-    const isCommitMessageHasPrefix = prefixes.some(prefix =>
-      commit.message.includes(prefix)
-    );
-    if (isCommitMessageHasPrefix) {
-      core.info(commit.message);
+  let changelogText = '';
+
+  for (const prefix of prefixes) {
+    changelogText += `*${locale[prefix]}*\n\n`;
+
+    for (const commit of commits) {
+      const isCommitMessageHasPrefix = commit.message.includes(prefix);
+      if (isCommitMessageHasPrefix) {
+        changelogText += `• ${commit.message} (${commit.author.username})\n`;
+      }
     }
+
+    changelogText += '\n\n\n';
   }
+
+  const TOKEN = core.getInput('token');
+  const CHAT_ID = core.getInput('chat_id');
+
+  const url = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
+  const urlSearchParams = new URLSearchParams({
+    chat_id: CHAT_ID,
+    text: encodeURIComponent(changelogText),
+  });
+
+  fetch(url + '?' + urlSearchParams.toString()).then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  });
+  core.info(changelogText);
 } catch (error) {
   core.setFailed(error.message);
 }

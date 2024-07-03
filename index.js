@@ -20,6 +20,20 @@ try {
     changelogText += '\n\n\n';
   }
 
+  const TOKEN = core.getInput('token');
+  const CHAT_ID = core.getInput('chat_id');
+
+  const url = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
+  const urlSearchParams = new URLSearchParams({
+    chat_id: CHAT_ID,
+    text: encodeURIComponent(changelogText),
+  });
+
+  fetch(url + '?' + urlSearchParams.toString()).then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  });
   core.info(changelogText);
 } catch (error) {
   core.setFailed(error.message);
