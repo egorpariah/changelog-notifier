@@ -31096,16 +31096,16 @@ try {
   let changelogText = '';
 
   for (const prefix of prefixes) {
-    changelogText += `*${locale[prefix]}*\\n\\n`;
+    changelogText += `*${locale[prefix]}*\n\n`;
 
     for (const commit of commits) {
       const isCommitMessageHasPrefix = commit.message.includes(prefix);
       if (isCommitMessageHasPrefix) {
-        changelogText += `• ${commit.message} \(${commit.author.username}\)\\n`;
+        changelogText += `• ${commit.message} \\(${commit.author.username}\\)\n`;
       }
     }
 
-    changelogText += '\\n\\n\\n';
+    changelogText += '\n\n';
   }
 
   const TOKEN = core.getInput('token');
@@ -31127,7 +31127,7 @@ try {
       );
     }
   });
-  
+
   core.info(changelogText);
 } catch (error) {
   core.setFailed(error.message);
