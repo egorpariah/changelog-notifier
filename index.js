@@ -8,16 +8,16 @@ try {
   let changelogText = '';
 
   for (const prefix of prefixes) {
-    changelogText += `*${locale[prefix]}*\n\n`;
+    changelogText += `*${locale[prefix]}*\\n\\n`;
 
     for (const commit of commits) {
       const isCommitMessageHasPrefix = commit.message.includes(prefix);
       if (isCommitMessageHasPrefix) {
-        changelogText += `• ${commit.message} \(${commit.author.username}\)\n`;
+        changelogText += `• ${commit.message} \(${commit.author.username}\)\\n`;
       }
     }
 
-    changelogText += '\n\n\n';
+    changelogText += '\\n\\n\\n';
   }
 
   const TOKEN = core.getInput('token');
@@ -32,7 +32,11 @@ try {
 
   fetch(url + '?' + urlSearchParams.toString()).then(response => {
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(
+        `HTTP error! status: ${response.status}, description: ${response
+          .json()
+          .then(json => json.description)}`
+      );
     }
   });
   core.info(changelogText);
