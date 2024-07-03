@@ -31089,7 +31089,7 @@ try {
       commit.message.includes(prefix)
     );
     if (isCommitMessageHasPrefix) {
-      console.log(commit.message);
+      core.info(commit.message);
     }
   }
 } catch (error) {
