@@ -1,0 +1,18 @@
+name: 'Changelog Notifier'
+description: 'Notifies you in Telegram when there is a new release'
+inputs:
+  prefixes:
+    description: 'Prefixes to search for'
+    required: false
+    default: |-
+      feat
+      fix
+  TOKEN: 
+    description: 'Telegram bot token'
+    required: true
+  CHAT_ID:
+    description: 'Telegram chat id'
+    required: true
+runs:
+  using: 'node20'
+  main: 'index.js'
