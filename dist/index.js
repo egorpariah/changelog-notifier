@@ -31101,16 +31101,16 @@ try {
 
   for (const prefix of prefixes) {
     for (const commit of commits) {
-      const isCommitMessageHasPrefix = commit.message.includes(prefix);
-      if (isCommitMessageHasPrefix) {
+      let firstLine = commit.message;
+      const indexOfNewLine = firstLine.indexOf('\n');
+      if (indexOfNewLine !== -1) {
+        firstLine = firstLine.slice(0, indexOfNewLine);
+      }
+      const isFirstLineHasPrefix = firstLine.includes(prefix);
+
+      if (isFirstLineHasPrefix) {
         if (!changelogText.includes(locale.prefixes[prefix])) {
           changelogText += `*${locale.prefixes[prefix]}*\n`;
-        }
-        
-        let firstLine = commit.message;
-        const indexOfNewLine = firstLine.indexOf('\n');
-        if (indexOfNewLine !== -1) {
-          firstLine = firstLine.slice(0, indexOfNewLine);
         }
         firstLine = firstLine.replace(`${prefix}:`, locale.emojis[prefix]);
         changelogText += `${firstLine} \\(${commit.author.username}\\)\n`;
