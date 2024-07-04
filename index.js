@@ -6,7 +6,7 @@ try {
   const prefixes = core.getMultilineInput('prefixes');
   const { repo } = github.context.repo;
   const commits = github.context.payload.commits;
-  
+
   let changelogText = '';
   changelogText += `*${repo}*\n\n`;
 
@@ -16,7 +16,9 @@ try {
     for (const commit of commits) {
       const isCommitMessageHasPrefix = commit.message.includes(prefix);
       if (isCommitMessageHasPrefix) {
-        changelogText += `• ${commit.message} \\(${commit.author.username}\\)\n`;
+        let firstLine = commit.message.slice(0, commit.message.indexOf('\n'));
+        firstLine = firstLine.replace(`${prefix}:`, locale.emojis[prefix]);
+        changelogText += `${firstLine} \\(${commit.author.username}\\)\n`;
       }
     }
 

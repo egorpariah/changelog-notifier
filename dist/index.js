@@ -31041,7 +31041,7 @@ module.exports = parseParams
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"feat":"Фичи","fix":"Исправления багов","docs":"Документация","style":"Форматирование","refactor":"Рефакторинг","perf":"Производительность","test":"Тесты","chore":"Служебные изменения"}');
+module.exports = JSON.parse('{"prefixes":{"feat":"Фичи","fix":"Исправления багов","docs":"Документация","style":"Форматирование","refactor":"Рефакторинг","perf":"Производительность","test":"Тесты","chore":"Служебные изменения"},"emojis":{"feat":"✨","fix":"🛠️","docs":"📖","style":"💎","refactor":"♻️","perf":"⚡️","test":"✅","chore":"🧹"}}');
 
 /***/ })
 
@@ -31092,24 +31092,29 @@ const locale = __nccwpck_require__(9150);
 
 try {
   const prefixes = core.getMultilineInput('prefixes');
+  const { repo } = github.context.repo;
   const commits = github.context.payload.commits;
+
   let changelogText = '';
+  changelogText += `*${repo}*\n\n`;
 
   for (const prefix of prefixes) {
-    changelogText += `*${locale[prefix]}*\n\n`;
+    changelogText += `*${locale[prefix]}*\n`;
 
     for (const commit of commits) {
       const isCommitMessageHasPrefix = commit.message.includes(prefix);
       if (isCommitMessageHasPrefix) {
-        changelogText += `• ${commit.message} \\(${commit.author.username}\\)\n`;
+        let firstLine = commit.message.slice(0, commit.message.indexOf('\n'));
+        firstLine = firstLine.replace(`${prefix}:`, locale.emojis[prefix]);
+        changelogText += `${firstLine} \\(${commit.author.username}\\)\n`;
       }
     }
 
-    changelogText += '\n\n';
+    changelogText += '\n';
   }
 
-  const TOKEN = core.getInput('token');
-  const CHAT_ID = core.getInput('chat_id');
+  const TOKEN = core.getInput('TOKEN');
+  const CHAT_ID = core.getInput('CHAT_ID');
 
   const url = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
   const urlSearchParams = new URLSearchParams({
@@ -31119,16 +31124,13 @@ try {
   });
 
   fetch(url + '?' + urlSearchParams.toString()).then(async response => {
-    const json = await response.json();
-
     if (!response.ok) {
+      const { description } = await response.json();
       throw new Error(
-        `HTTP error! status: ${response.status}, description: ${json.description}`
+        `HTTP error! status: ${response.status}, description: ${description}`
       );
     }
   });
-
-  core.info(changelogText);
 } catch (error) {
   core.setFailed(error.message);
 }
