@@ -20,7 +20,7 @@ try {
         firstLine = firstLine.slice(0, indexOfNewLine);
       }
       firstLine = firstLine.replace(escapeRegex, '\\$1');
-      const isFirstLineHasPrefix = firstLine.includes(prefix);
+      const isFirstLineHasPrefix = firstLine.includes(`${prefix}:`);
 
       if (isFirstLineHasPrefix) {
         if (!changelogText.includes(locale.prefixes[prefix])) {
