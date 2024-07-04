@@ -13,12 +13,15 @@ inputs:
       perf
       test
       chore
-  TOKEN: 
+  token: 
     description: 'Telegram bot token'
     required: true
-  CHAT_ID:
+  chat_id:
     description: 'Telegram chat id'
     required: true
+  project_name:
+    description: 'Project name'
+    required: false
 runs:
   using: 'node20'
   main: 'dist/index.js'

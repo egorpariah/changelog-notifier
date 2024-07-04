@@ -4,11 +4,12 @@ const locale = require('./locale.json');
 
 try {
   const prefixes = core.getMultilineInput('prefixes');
+  const projectName = core.getInput('project_name');
   const { repo } = github.context.repo;
   const commits = github.context.payload.commits;
 
   let changelogText = '';
-  changelogText += `*${repo}*\n\n`;
+  changelogText += `*${projectName || repo}*\n\n`;
 
   for (const prefix of prefixes) {
     for (const commit of commits) {
@@ -29,12 +30,12 @@ try {
     }
   }
 
-  const TOKEN = core.getInput('TOKEN');
-  const CHAT_ID = core.getInput('CHAT_ID');
+  const token = core.getInput('token');
+  const chatId = core.getInput('chat_id');
 
-  const url = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
+  const url = `https://api.telegram.org/bot${token}/sendMessage`;
   const urlSearchParams = new URLSearchParams({
-    chat_id: CHAT_ID,
+    chat_id: chatId,
     text: changelogText,
     parse_mode: 'MarkdownV2',
   });
