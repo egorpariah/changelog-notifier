@@ -31112,7 +31112,9 @@ try {
       }
     }
 
-    changelogText += '\n';
+    if (changelogText.includes(locale.prefixes[prefix])) {
+      changelogText += '\n';
+    }
   }
 
   const TOKEN = core.getInput('TOKEN');
