@@ -4,11 +4,14 @@ const locale = require('./locale.json');
 
 try {
   const prefixes = core.getMultilineInput('prefixes');
+  const { repo } = github.context.repo;
   const commits = github.context.payload.commits;
+  
   let changelogText = '';
+  changelogText += `*${repo}*\n\n`;
 
   for (const prefix of prefixes) {
-    changelogText += `*${locale[prefix]}*\n\n`;
+    changelogText += `*${locale[prefix]}*\n`;
 
     for (const commit of commits) {
       const isCommitMessageHasPrefix = commit.message.includes(prefix);
@@ -17,7 +20,7 @@ try {
       }
     }
 
-    changelogText += '\n\n';
+    changelogText += '\n';
   }
 
   const TOKEN = core.getInput('TOKEN');
