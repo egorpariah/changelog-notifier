@@ -31107,7 +31107,11 @@ try {
           changelogText += `*${locale.prefixes[prefix]}*\n`;
         }
         
-        let firstLine = commit.message.slice(0, commit.message.indexOf('\n'));
+        let firstLine = commit.message;
+        const indexOfNewLine = firstLine.indexOf('\n');
+        if (indexOfNewLine !== -1) {
+          firstLine = firstLine.slice(0, indexOfNewLine);
+        }
         firstLine = firstLine.replace(`${prefix}:`, locale.emojis[prefix]);
         changelogText += `${firstLine} \\(${commit.author.username}\\)\n`;
       }
