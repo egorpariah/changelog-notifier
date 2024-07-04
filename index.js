@@ -3,8 +3,9 @@ const github = require('@actions/github');
 const locale = require('./locale.json');
 
 try {
+  const escapeRegex = /([|{\[\]*_~}+)(#>!=\-.])/gm;
   const prefixes = core.getMultilineInput('prefixes');
-  const projectName = core.getInput('project_name');
+  const projectName = core.getInput('project_name').replace(escapeRegex, '\\$1');
   const { repo } = github.context.repo;
   const commits = github.context.payload.commits;
 
@@ -18,6 +19,7 @@ try {
       if (indexOfNewLine !== -1) {
         firstLine = firstLine.slice(0, indexOfNewLine);
       }
+      firstLine = firstLine.replace(escapeRegex, '\\$1');
       const isFirstLineHasPrefix = firstLine.includes(prefix);
 
       if (isFirstLineHasPrefix) {
