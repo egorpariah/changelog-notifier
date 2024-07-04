@@ -11,11 +11,13 @@ try {
   changelogText += `*${repo}*\n\n`;
 
   for (const prefix of prefixes) {
-    changelogText += `*${locale[prefix]}*\n`;
-
     for (const commit of commits) {
       const isCommitMessageHasPrefix = commit.message.includes(prefix);
       if (isCommitMessageHasPrefix) {
+        if (!changelogText.includes(locale.prefixes[prefix])) {
+          changelogText += `*${locale.prefixes[prefix]}*\n`;
+        }
+        
         let firstLine = commit.message.slice(0, commit.message.indexOf('\n'));
         firstLine = firstLine.replace(`${prefix}:`, locale.emojis[prefix]);
         changelogText += `${firstLine} \\(${commit.author.username}\\)\n`;
