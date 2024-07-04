@@ -20,8 +20,8 @@ try {
     changelogText += '\n\n';
   }
 
-  const TOKEN = core.getInput('token');
-  const CHAT_ID = core.getInput('chat_id');
+  const TOKEN = core.getInput('TOKEN');
+  const CHAT_ID = core.getInput('CHAT_ID');
 
   const url = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
   const urlSearchParams = new URLSearchParams({
@@ -31,16 +31,13 @@ try {
   });
 
   fetch(url + '?' + urlSearchParams.toString()).then(async response => {
-    const json = await response.json();
-
     if (!response.ok) {
+      const { description } = await response.json();
       throw new Error(
-        `HTTP error! status: ${response.status}, description: ${json.description}`
+        `HTTP error! status: ${response.status}, description: ${description}`
       );
     }
   });
-
-  core.info(changelogText);
 } catch (error) {
   core.setFailed(error.message);
 }

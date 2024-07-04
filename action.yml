@@ -7,6 +7,12 @@ inputs:
     default: |-
       feat
       fix
+      docs
+      style
+      refactor
+      perf
+      test
+      chore
   TOKEN: 
     description: 'Telegram bot token'
     required: true
