@@ -10,7 +10,6 @@ try {
   const commits = github.context.payload.commits;
 
   let changelogText = '';
-  changelogText += `*${projectName || repo}*\n\n`;
 
   for (const prefix of prefixes) {
     for (const commit of commits) {
@@ -35,6 +34,13 @@ try {
       changelogText += '\n';
     }
   }
+
+  if (changelogText.trim() === '') {
+    core.info('No changes found');
+    return;
+  }
+
+  changelogText = `*${projectName || repo}*\n\n` + changelogText;
 
   const token = core.getInput('token');
   const chatId = core.getInput('chat_id');
