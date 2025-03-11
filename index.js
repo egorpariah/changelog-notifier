@@ -5,9 +5,14 @@ const locale = require('./locale.json');
 try {
   const escapeRegex = /([|{\[\]*_~}+)(#>!=\-.])/gm;
   const prefixes = core.getMultilineInput('prefixes');
-  const projectName = core.getInput('project_name').replace(escapeRegex, '\\$1');
+  const projectName = core
+    .getInput('project_name')
+    .replace(escapeRegex, '\\$1');
+  const commits =
+    core.getInput('commits') === ''
+      ? github.context.payload.commits
+      : JSON.parse(core.getInput('commits'));
   const { repo } = github.context.repo;
-  const commits = github.context.payload.commits;
 
   let changelogText = '';
 

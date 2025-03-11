@@ -22,6 +22,9 @@ inputs:
   project_name:
     description: 'Project name'
     required: false
+  commits:
+    description: 'Commits'
+    required: false
 runs:
   using: 'node20'
   main: 'dist/index.js'

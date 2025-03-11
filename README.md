@@ -8,13 +8,17 @@ This action notifies you in Telegram when there is a new release.
 
 Multiline input of convetional commits prefixes. Default `feat fix`.
 
-### `TOKEN`
+### `token`
 
 **Required** Telegram bot token.
 
-### `CHAT_ID`
+### `chat_id`
 
 **Required** Telegram chat ID.
+
+### `commits`
+
+JSON string from the github.event payload with an array of commits. If not provided, it is assumed that the commits are taken from the current workflow.
 
 ## Example usage
 
